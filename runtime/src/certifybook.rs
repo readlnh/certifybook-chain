@@ -22,23 +22,20 @@ pub trait Trait: system::Trait {
 // This module's storage items.
 
 decl_storage! {
-	trait Store for Module<T: Trait> as TemplateModule {
+	trait Store for Module<T: Trait> as CertifybookModule {
 		// Just a dummy storage item.
-		// Here we are declaring a StorageValue, `Something` as a Option<u32>
-		// `get(fn something)` is the default getter which returns either the stored `u32` or `None` if nothing stored
-		Something get(fn something): Option<u32>;
 
 		// //Certificates get(kitty): map T::Hash => Kitty<T::Hash, T::Balance>;
         // KittyOwner get(owner_of): map T::Hash => Option<T::AccountId>;
 
         AllCertificatesArray get(certificate_by_index): map u64 => T::Hash;
         AllCertificatesCount get(all_certificates_count): u64;
-        AllCertificatesIndex: map T::Hash => u64;
+        //AllCertificatesIndex: map T::Hash => u64;
 
 		OrgCertificatesArray get(certificate_of_org_by_index): map (T::AccountId, u64) => T::Hash;
 		// The count of certificates issued by organizations
 		OrgCertificatesCount get(certificates_count_of_org): map T::AccountId => u64;
-		OrgCertificatesIndex: map T::Hash => u64;
+		//OrgCertificatesIndex: map T::Hash => u64;
 	}
 }
 
@@ -53,7 +50,7 @@ decl_module! {
 		// Just a dummy entry point.
 		// function that can be called by the external world as an extrinsics call
 		// takes a parameter of the type `AccountId`, stores it and emits an event
-		pub fn do_something(origin, certificate: T::Hash) -> DispatchResult {
+		pub fn new_certificate(origin, certificate: T::Hash) -> DispatchResult {
 			let who = ensure_signed(origin)?;
 
 			let all_certificates_count = Self::all_certificates_count();
@@ -66,23 +63,24 @@ decl_module! {
 			<OrgCertificatesCount<T>>::insert(who.clone(), new_certificates_count_of_org);
 			<OrgCertificatesArray<T>>::insert((who.clone(), certificates_count_of_org), certificate);
 
-			// TODO: Code to execute when something calls this.
-			// For example: the following line stores the passed in u32 in the storage
-			//omething::put(something);
 
 			// here we are raising the Something event
 			//Self::deposit_event(RawEvent::SomethingStored(something, who));
+			Self::deposit_event(RawEvent::CertificateStored(certificate, who));
 			Ok(())
 		}
 	}
 }
 
 decl_event!(
-	pub enum Event<T> where AccountId = <T as system::Trait>::AccountId {
-		// Just a dummy event.
+	pub enum Event<T> 
+	where 
+		AccountId = <T as system::Trait>::AccountId,
+		Hash = <T as system::Trait>::Hash {
+			// Just a dummy event.
 		// Event `Something` is declared with a parameter of the type `u32` and `AccountId`
 		// To emit this event, we call the deposit funtion, from our runtime funtions
-		SomethingStored(u32, AccountId),
+		CertificateStored(Hash, AccountId),
 	}
 );
 
@@ -133,7 +131,7 @@ mod tests {
 	impl Trait for Test {
 		type Event = ();
 	}
-	type TemplateModule = Module<Test>;
+	type CertifybookModule = Module<Test>;
 
 	// This function basically just builds a genesis storage key/value store according to
 	// our desired mockup.
@@ -146,9 +144,9 @@ mod tests {
 		new_test_ext().execute_with(|| {
 			// Just a dummy test for the dummy funtion `do_something`
 			// calling the `do_something` function with a value 42
-			assert_ok!(TemplateModule::do_something(Origin::signed(1), 42));
+			assert_ok!(CertifybookModule::do_something(Origin::signed(1), 42));
 			// asserting that the stored value is equal to what we stored
-			assert_eq!(TemplateModule::something(), Some(42));
+			assert_eq!(CertifybookModule::something(), Some(42));
 		});
 	}
 }

@@ -130,5 +130,5 @@ version = '2.0.0'
 members = ['runtime']
 
 [[bin]]
-name = 'node-template'
+name = 'certifybook-node'
 path = 'src/main.rs'
