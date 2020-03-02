@@ -8,7 +8,10 @@
 /// For more guidance on Substrate modules, see the example module
 /// https://github.com/paritytech/substrate/blob/master/frame/example/src/lib.rs
 
-use frame_support::{decl_module, decl_storage, decl_event, dispatch::DispatchResult, StorageValue, StorageMap};
+use frame_support::{
+	decl_module, decl_storage, decl_event, dispatch::DispatchResult, StorageValue, StorageMap,
+	weights::{SimpleDispatchInfo, DispatchInfo, DispatchClass, ClassifyDispatch, WeighData, Weight, PaysFee}
+};
 use system::ensure_signed;
 
 /// The module's configuration trait.
@@ -50,6 +53,7 @@ decl_module! {
 		// Just a dummy entry point.
 		// function that can be called by the external world as an extrinsics call
 		// takes a parameter of the type `AccountId`, stores it and emits an event
+		#[weight = SimpleDispatchInfo::FixedNormal(0)]
 		pub fn new_certificate(origin, certificate: T::Hash) -> DispatchResult {
 			let who = ensure_signed(origin)?;
 
