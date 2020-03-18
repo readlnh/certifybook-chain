@@ -5,7 +5,7 @@ panic = 'unwind'
 authors = ['Anonymous']
 build = 'build.rs'
 edition = '2018'
-name = 'node-template'
+name = 'node-certifybook'
 version = '2.0.0'
 
 [build-dependencies]
@@ -48,7 +48,7 @@ package = 'sp-finality-grandpa'
 rev = '3e651110aa06aa835790df63410a29676243fc54'
 version = '2.0.0'
 
-[dependencies.node-template-runtime]
+[dependencies.node-certifybook-runtime]
 path = 'runtime'
 version = '2.0.0'
 

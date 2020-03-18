@@ -4,13 +4,15 @@
 /// If you change the name of this file, make sure to update its references in runtime/src/lib.rs
 /// If you remove this file, you can remove those references
 
-
 /// For more guidance on Substrate modules, see the example module
 /// https://github.com/paritytech/substrate/blob/master/frame/example/src/lib.rs
-
 use frame_support::{
-	decl_module, decl_storage, decl_event, dispatch::DispatchResult, StorageValue, StorageMap,
-	weights::{SimpleDispatchInfo, DispatchInfo, DispatchClass, ClassifyDispatch, WeighData, Weight, PaysFee}
+	decl_event, decl_module, decl_storage,
+	dispatch::DispatchResult,
+	weights::{
+		SimpleDispatchInfo,
+	},
+	StorageMap, StorageValue,
 };
 use system::ensure_signed;
 
@@ -29,11 +31,11 @@ decl_storage! {
 		// Just a dummy storage item.
 
 		// //Certificates get(kitty): map T::Hash => Kitty<T::Hash, T::Balance>;
-        // KittyOwner get(owner_of): map T::Hash => Option<T::AccountId>;
+		// KittyOwner get(owner_of): map T::Hash => Option<T::AccountId>;
 
-        AllCertificatesArray get(certificate_by_index): map u64 => T::Hash;
-        AllCertificatesCount get(all_certificates_count): u64;
-        //AllCertificatesIndex: map T::Hash => u64;
+		AllCertificatesArray get(certificate_by_index): map u64 => T::Hash;
+		AllCertificatesCount get(all_certificates_count): u64;
+		//AllCertificatesIndex: map T::Hash => u64;
 
 		OrgCertificatesArray get(certificate_of_org_by_index): map (T::AccountId, u64) => T::Hash;
 		// The count of certificates issued by organizations
@@ -77,11 +79,12 @@ decl_module! {
 }
 
 decl_event!(
-	pub enum Event<T> 
-	where 
+	pub enum Event<T>
+	where
 		AccountId = <T as system::Trait>::AccountId,
-		Hash = <T as system::Trait>::Hash {
-			// Just a dummy event.
+		Hash = <T as system::Trait>::Hash,
+	{
+		// Just a dummy event.
 		// Event `Something` is declared with a parameter of the type `u32` and `AccountId`
 		// To emit this event, we call the deposit funtion, from our runtime funtions
 		CertificateStored(Hash, AccountId),
@@ -93,10 +96,12 @@ decl_event!(
 mod tests {
 	use super::*;
 
+	use frame_support::{assert_ok, impl_outer_origin, parameter_types, weights::Weight};
 	use sp_core::H256;
-	use frame_support::{impl_outer_origin, assert_ok, parameter_types, weights::Weight};
 	use sp_runtime::{
-		traits::{BlakeTwo256, IdentityLookup}, testing::Header, Perbill,
+		testing::Header,
+		traits::{BlakeTwo256, IdentityLookup},
+		Perbill,
 	};
 
 	impl_outer_origin! {
@@ -140,7 +145,10 @@ mod tests {
 	// This function basically just builds a genesis storage key/value store according to
 	// our desired mockup.
 	fn new_test_ext() -> sp_io::TestExternalities {
-		system::GenesisConfig::default().build_storage::<Test>().unwrap().into()
+		system::GenesisConfig::default()
+			.build_storage::<Test>()
+			.unwrap()
+			.into()
 	}
 
 	#[test]
